@@ -40,7 +40,10 @@ async function main(locksmiths) {
       keyManager.address
     )
     const proxyAdmin = await ethers.getContractAt(
-      ['function owner() view returns (address)'],
+      [
+        'function owner() view returns (address)',
+        'function transferOwnership(address newOwner)',
+      ],
       proxyAdminAddress
     )
     const proxyAdminOwner = await proxyAdmin.owner()
@@ -48,10 +51,8 @@ async function main(locksmiths) {
       console.log(
         `> Proxy admin is owned by deployer, transfering to multisig ${multisig}`
       )
-      await upgrades.admin.transferProxyAdminOwnership(
-        keyManager.address,
-        multisig
-      )
+      const tx = await proxyAdmin.transferOwnership(multisig)
+      await tx.wait()
       console.log(`> Transfered proxy admin ownership to ${multisig}`)
     } else if (proxyAdminOwner === multisig) {
       console.log(`> Proxy admin is already owned by multisig`)

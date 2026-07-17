@@ -50,6 +50,7 @@ const run = async () => {
     const { default: network } = await import(resolvedPath)
 
     // get all addresses to check
+    // TODO: Remove hardcoded 'lens' bypasses once subgraph, token, and explorer validation are fully wired
     const addresses = !filePath.includes('lens')
       ? await getAllAddresses({ network })
       : {}
@@ -104,8 +105,9 @@ const run = async () => {
         successes.push(`✅ Unlock ownership correctly set to the DAO`)
       }
     } else if (filePath.includes('lens')) {
+      // TODO: Remove once Safe/ownership validation supports Lens RPC quirks
       warnings.push(
-        `⚠️ Skipping on-chain multisig/ownership checks for ${filePath} as it is not yet deployed`
+        `⚠️ Skipping on-chain multisig/ownership checks for ${filePath}`
       )
     } else {
       try {

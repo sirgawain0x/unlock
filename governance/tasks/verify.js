@@ -87,6 +87,8 @@ task('verify-unlock', 'Verify the Unlock factory at specific version')
         await fs.readFile(path.join(buildInfoDir, file), 'utf8')
       )
       if (info.input?.sources?.[targetSource]) {
+        // Unlock dist files are flattened; keep only the target source so
+        // Blockscout verifies the intended contract from a multi-file build-info.
         standardInput = JSON.stringify({
           language: info.input.language,
           sources: { [targetSource]: info.input.sources[targetSource] },
